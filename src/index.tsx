@@ -1,6 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import CONSTANTS from "./consts";
+import { configureStore } from "./store";
+import { PageMain } from "./pages/main";
 
 if (CONSTANTS.isProd && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -15,14 +18,13 @@ if (CONSTANTS.isProd && "serviceWorker" in navigator) {
   });
 }
 
+const store = configureStore();
+
 function App() {
   return (
-    <>
-      <header>
-        <h1>Users</h1>
-      </header>
-      <main>Users data</main>
-    </>
+    <Provider store={store}>
+      <PageMain />
+    </Provider>
   );
 }
 
