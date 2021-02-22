@@ -1,6 +1,10 @@
-import React from "react";
-import { UsersTable } from "./table";
-import { UsersMap } from "./map";
+import React, { Suspense } from "react";
+import { CircularProgress } from "@material-ui/core";
+import mainPageStyles from "./index.scss";
+import { Header } from "../../components/header";
+
+const UsersTable = React.lazy(() => import("../../pages/main/table"));
+const UsersMap = React.lazy(() => import("../../pages/main/map"));
 
 export const CheckedUsersContext = React.createContext<{
   setCheckedUsersIds: React.Dispatch<React.SetStateAction<Array<string>>>;
@@ -11,18 +15,16 @@ export function PageMain(): React.ReactElement {
   const [checkedUsersIds, setCheckedUsersIds] = React.useState<Array<string>>(
     []
   );
-  const store = React.useMemo(() => ({ checkedUsersIds, setCheckedUsersIds }), [
+  const checkedUsersContext = React.useMemo(() => ({ checkedUsersIds, setCheckedUsersIds }), [
     checkedUsersIds,
   ]);
   return (
     <>
-      <header>
-        <h1>Users</h1>
-      </header>
-      <main>
-        <CheckedUsersContext.Provider value={store}>
-          <UsersTable />
-          <UsersMap />
+      <Header />
+      <main className={mainPageStyles.mainWrapper}>
+        <CheckedUsersContext.Provider value={checkedUsersContext}>
+          <Suspense children={<UsersTable />} fallback={<CircularProgress />} />
+          <Suspense children={<UsersMap />} fallback={<CircularProgress />} />
         </CheckedUsersContext.Provider>
       </main>
     </>
