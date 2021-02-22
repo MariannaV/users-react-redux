@@ -1,5 +1,6 @@
 import React from "react";
 import { UsersTable } from "./table";
+import { UsersMap } from "./map";
 
 export const CheckedUsersContext = React.createContext<{
   setCheckedUsersIds: React.Dispatch<React.SetStateAction<Array<string>>>;
@@ -21,6 +22,7 @@ export function PageMain(): React.ReactElement {
       <main>
         <CheckedUsersContext.Provider value={store}>
           <UsersTable />
+          <UsersMap />
         </CheckedUsersContext.Provider>
       </main>
     </>
