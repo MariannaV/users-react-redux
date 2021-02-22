@@ -1,0 +1,15 @@
+@import "../../../styles/variables.scss";
+
+.mapWrapper {
+  min-height: 300px;
+  height: 100%;
+
+  @media (--max-desktop) {
+    margin: 0 auto;
+    width: 80%;
+  }
+
+  @media (--min-desktop) {
+    width: 45%;
+  }
+}
