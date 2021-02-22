@@ -12,8 +12,11 @@ import { IStore } from "../../../store";
 import { NUsers } from "../../../store/users/@types";
 import { API_Users } from "../../../store/users/actions";
 import { CheckedUsersContext } from "../index";
+import tableStyles from "./index.scss";
 
-export function UsersTable(): React.ReactElement {
+export default React.memo(UsersTable);
+
+function UsersTable(): React.ReactElement {
   const dispatch = useDispatch(),
     userIdsList = useSelector<IStore>((store) => store.users.list);
 
@@ -39,10 +42,12 @@ export function UsersTable(): React.ReactElement {
   }, [userIdsList]);
 
   return (
-    <Table>
-      <TableHead children={<TableRow children={tableHeader} />} />
-      <TableBody children={tableBody} />
-    </Table>
+    <div className={tableStyles.tableWrapper}>
+      <Table>
+        <TableHead children={<TableRow children={tableHeader} />} />
+        <TableBody children={tableBody} />
+      </Table>
+    </div>
   );
 }
 
@@ -53,7 +58,7 @@ interface IUsersTableRow {
 function UsersTableRow(props: IUsersTableRow) {
   const user = useSelector<IStore>((store) => store.users.map[props.userId]);
   const usersContext = React.useContext(CheckedUsersContext),
-    { checkedUsersIds, setCheckedUsersIds } = usersContext;
+    { setCheckedUsersIds } = usersContext;
 
   const onSelectUser = React.useCallback(
     (event) => {
@@ -63,7 +68,8 @@ function UsersTableRow(props: IUsersTableRow) {
         if (checkboxValue.checked) {
           nextValue.push(props.userId);
         } else {
-          //remove
+          const indexOfRemovedId = nextValue.indexOf(props.userId);
+          nextValue.splice(indexOfRemovedId, 1);
         }
         return nextValue;
       });

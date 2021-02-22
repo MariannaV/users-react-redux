@@ -1,0 +1,10 @@
+@import "../../../styles/variables.scss";
+
+.tableWrapper {
+  @media (--min-desktop) {
+    width: 45%;
+    overflow-y: auto;
+    border: 1px solid;
+    border-radius: 3px;
+  }
+}

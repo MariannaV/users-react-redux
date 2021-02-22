@@ -1,0 +1,15 @@
+@import "../../styles/variables";
+
+.mainWrapper {
+  @media (--max-desktop) {
+    display: grid;
+    grid-gap: 1rem;
+  }
+
+  @media (--min-desktop) {
+    display: flex;
+    justify-content: space-around;
+    overflow-y: hidden;
+    height: 80vh;
+  }
+}
