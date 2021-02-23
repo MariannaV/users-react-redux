@@ -1,7 +1,8 @@
+import { Dispatch } from "redux";
 import { NUsers } from "./@types";
 
 export const API_Users = {
-  usersGet: (parameters: any) => async (dispatch: any, getStore: any) => {
+  usersGet: () => async (dispatch: Dispatch) => {
     try {
       dispatch({ type: NUsers.ActionTypes.USERS_FETCH_START });
       const response = await fetch(

@@ -1,15 +1,18 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import { CheckedUsersContext } from "../index";
-import { useSelector } from "react-redux";
 import { IStore } from "../../../store";
 import buttonStyles from "./index.scss";
+import { NUsers } from "../../../store/users/@types";
 
 export function SendDataButton(): React.ReactElement {
   const usersContext = React.useContext(CheckedUsersContext),
     { checkedUsersIds } = usersContext;
 
-  const usersMap = useSelector<IStore>((store) => store.users.map);
+  const usersMap = useSelector<IStore, IStore["users"]["map"]>(
+    (store) => store.users.map
+  );
 
   const usersData = React.useMemo(
     () =>
@@ -20,10 +23,9 @@ export function SendDataButton(): React.ReactElement {
     [checkedUsersIds]
   );
 
-  const sendUsersData = React.useCallback(
-    async () => dataRequest({ usersData }),
-    [usersData]
-  );
+  const sendUsersData = React.useCallback(() => dataRequest({ usersData }), [
+    usersData,
+  ]);
 
   return (
     <Button
@@ -38,7 +40,9 @@ export function SendDataButton(): React.ReactElement {
 }
 
 async function dataRequest(parameters: {
-  usersData: Array<{ id: string; zipcode: string }>;
+  usersData: Array<
+    Pick<NUsers.IUser, "id"> & Pick<NUsers.IUser["address"], "zipcode">
+  >;
 }) {
   const { usersData } = parameters;
   try {

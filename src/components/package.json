@@ -11,6 +11,8 @@
     "@material-ui/icons": "4.11.2"
   },
   "devDependencies": {
-    "@types/react-router-dom": "5.1.7"
+    "@types/react-router-dom": "5.1.7",
+    "@types/leaflet": "1.5.23",
+    "@types/react-leaflet": "2.5.2"
   }
 }

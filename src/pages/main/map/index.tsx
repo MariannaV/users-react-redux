@@ -1,52 +1,47 @@
 import React from "react";
-import { CheckedUsersContext } from "../index";
 import { useSelector } from "react-redux";
-import { IStore } from "../../../store";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import * as NLeafletMap from "leaflet";
+import { CheckedUsersContext } from "../index";
+import { IStore } from "../../../store";
 import mapStyles from "./index.scss";
 
 export default React.memo(UsersMap);
 
-export function UsersMapWrapper(): React.ReactElement {
-  return (
-    <div className={mapStyles.mapWrapper}>
-      <div children={<UsersMap />} id="usersMap" />
-    </div>
-  );
-}
-
 function UsersMap() {
-  const users = useSelector<IStore>((store) => store.users.map);
+  const users = useSelector<IStore, IStore["users"]["map"]>(
+    (store) => store.users.map
+  );
 
   const usersContext = React.useContext(CheckedUsersContext),
     { checkedUsersIds } = usersContext;
 
-  const mapReference = React.useRef<null | any>(null),
+  const mapReference = React.useRef<null | NLeafletMap.Map>(null),
     onMapMount = React.useCallback((map) => {
       mapReference.current = map;
     }, []);
 
   const createMarkers = React.useMemo(
     () =>
-      checkedUsersIds.map((userid: string) => (
+      checkedUsersIds.map((userId) => (
         <Marker
           children={
             <Popup>
-              <p>{users[userid].name}</p>
+              <p>{users[userId].name}</p>
               <p>
                 <strong>City: </strong>
-                {users[userid].address.city}
+                {users[userId].address.city}
               </p>
               <p>
                 <strong>Street: </strong>
-                {users[userid].address.street}
+                {users[userId].address.street}
               </p>
             </Popup>
           }
-          key={userid}
+          key={userId}
           position={[
-            users[userid].address.geo.lat,
-            users[userid].address.geo.lng,
+            users[userId].address.geo.lat,
+            users[userId].address.geo.lng,
           ]}
         />
       )),
@@ -54,7 +49,7 @@ function UsersMap() {
   );
 
   const zoom = 3,
-    mapCenterPositionDefault = React.useMemo<[number, number]>(
+    mapCenterPositionDefault = React.useMemo<NLeafletMap.LatLngExpression>(
       () => [24.8918, 21.8984],
       []
     );
@@ -66,16 +61,16 @@ function UsersMap() {
     const indexOfLastCheckedUser = checkedUsersIds.length - 1;
     const centerCoords =
       checkedUsersIds.length > 0
-        ? [
+        ? ([
             Number(
               users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lat
             ),
             Number(
               users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lng
             ),
-          ]
+          ] as NLeafletMap.LatLngTuple)
         : mapCenterPositionDefault;
-    mapReference.current.setView(centerCoords, zoom);
+    mapReference.current!.setView(centerCoords, zoom);
   }, [checkedUsersIds, mapCenterPositionDefault]);
 
   return (

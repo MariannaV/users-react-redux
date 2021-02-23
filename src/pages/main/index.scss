@@ -3,8 +3,6 @@
 .mainWrapper {
   display: grid;
   grid-gap: 1rem;
-  @media (--max-desktop) {
-  }
 
   @media (--min-desktop) {
     height: 80vh;

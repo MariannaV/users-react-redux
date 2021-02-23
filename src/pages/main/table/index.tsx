@@ -18,10 +18,12 @@ export default React.memo(UsersTable);
 
 function UsersTable(): React.ReactElement {
   const dispatch = useDispatch(),
-    userIdsList = useSelector<IStore>((store) => store.users.list);
+    userIdsList = useSelector<IStore, IStore["users"]["list"]>(
+      (store) => store.users.list
+    );
 
   React.useEffect(() => {
-    dispatch(API_Users.usersGet({}));
+    dispatch(API_Users.usersGet());
   }, []);
 
   const tableHeader = React.useMemo(() => {
@@ -37,7 +39,7 @@ function UsersTable(): React.ReactElement {
 
   const tableBody = React.useMemo(
     () =>
-      userIdsList?.map((userId: any) => (
+      userIdsList.map((userId: any) => (
         <UsersTableRow key={userId} userId={userId} />
       )),
     [userIdsList]
@@ -58,7 +60,7 @@ interface IUsersTableRow {
 }
 
 function UsersTableRow(properties: IUsersTableRow) {
-  const user = useSelector<IStore>(
+  const user = useSelector<IStore, NUsers.IUser>(
     (store) => store.users.map[properties.userId]
   );
   const usersContext = React.useContext(CheckedUsersContext),
@@ -84,8 +86,8 @@ function UsersTableRow(properties: IUsersTableRow) {
   return (
     <TableRow>
       <TableCell children={<Checkbox onChange={onSelectUser} />} />
-      <TableCell children={user?.name} />
-      <TableCell children={user?.phone} />
+      <TableCell children={user.name} />
+      <TableCell children={user.phone} />
     </TableRow>
   );
 }
