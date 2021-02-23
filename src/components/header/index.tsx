@@ -1,8 +1,9 @@
 import React from "react";
+import headerStyles from "./index.scss";
 
 export function Header() {
   return (
-    <header>
+    <header className={headerStyles.header}>
       <h1>Users</h1>
     </header>
   );

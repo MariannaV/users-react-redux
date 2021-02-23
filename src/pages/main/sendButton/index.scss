@@ -1,0 +1,7 @@
+@import "../../../styles/variables.scss";
+
+.sendButton {
+  @media (--min-desktop) {
+    grid-area: button;
+  }
+}

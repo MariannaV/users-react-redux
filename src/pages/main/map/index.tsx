@@ -53,7 +53,7 @@ function UsersMap() {
     });
   }, [checkedUsersIds]);
 
-  const zoom = 4,
+  const zoom = 3,
     mapCenterPositionDefault = React.useMemo<[number, number]>(
       () => [24.8918, 21.8984],
       []
