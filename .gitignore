@@ -2,3 +2,4 @@
 .idea
 /**/*.scss.d.ts
 ./dist
+/**/yarn-error.lock
