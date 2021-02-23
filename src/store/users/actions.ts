@@ -1,7 +1,7 @@
 import { NUsers } from "./@types";
 
 export const API_Users = {
-  usersGet: (params: any) => async (dispatch: any, getStore: any) => {
+  usersGet: (parameters: any) => async (dispatch: any, getStore: any) => {
     try {
       dispatch({ type: NUsers.ActionTypes.USERS_FETCH_START });
       const response = await fetch(
@@ -11,7 +11,7 @@ export const API_Users = {
         type: NUsers.ActionTypes.USERS_FETCH_SUCCESS,
         payload: await response.json(),
       });
-    } catch (error) {
+    } catch {
       dispatch({ type: NUsers.ActionTypes.USERS_FETCH_FAIL });
     }
   },

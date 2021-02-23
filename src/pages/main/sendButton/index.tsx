@@ -11,35 +11,36 @@ export function SendDataButton(): React.ReactElement {
 
   const usersMap = useSelector<IStore>((store) => store.users.map);
 
-  const usersData = React.useMemo(() => {
-    return checkedUsersIds.map((userId) => {
-      return {
+  const usersData = React.useMemo(
+    () =>
+      checkedUsersIds.map((userId) => ({
         id: usersMap[userId].id,
         zipcode: usersMap[userId].address.zipcode,
-      };
-    });
-  }, [checkedUsersIds]);
+      })),
+    [checkedUsersIds]
+  );
 
-  const sendUsersData = React.useCallback(async () => dataRequest({ usersData }), [
-    usersData,
-  ]);
+  const sendUsersData = React.useCallback(
+    async () => dataRequest({ usersData }),
+    [usersData]
+  );
 
   return (
     <Button
-      className={buttonStyles.sendButton}
-      variant="outlined"
       children="Send"
+      className={buttonStyles.sendButton}
       color="primary"
+      disabled={checkedUsersIds.length === 0}
       onClick={sendUsersData}
-      disabled={!checkedUsersIds.length}
+      variant="outlined"
     />
   );
 }
 
-async function dataRequest(params: {
+async function dataRequest(parameters: {
   usersData: Array<{ id: string; zipcode: string }>;
 }) {
-  const { usersData } = params;
+  const { usersData } = parameters;
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com", {
       method: "POST",
@@ -49,7 +50,7 @@ async function dataRequest(params: {
       body: JSON.stringify(usersData),
     });
     if (response.status !== 200)
-      throw Error(
+      throw new Error(
         `Failed sending selected users data. Response status is ${response.status}`
       );
     return await response.json();

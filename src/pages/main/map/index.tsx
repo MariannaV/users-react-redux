@@ -2,7 +2,7 @@ import React from "react";
 import { CheckedUsersContext } from "../index";
 import { useSelector } from "react-redux";
 import { IStore } from "../../../store";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import mapStyles from "./index.scss";
 
 export default React.memo(UsersMap);
@@ -10,7 +10,7 @@ export default React.memo(UsersMap);
 export function UsersMapWrapper(): React.ReactElement {
   return (
     <div className={mapStyles.mapWrapper}>
-      <div id="usersMap" children={<UsersMap />} />
+      <div children={<UsersMap />} id="usersMap" />
     </div>
   );
 }
@@ -21,20 +21,15 @@ function UsersMap() {
   const usersContext = React.useContext(CheckedUsersContext),
     { checkedUsersIds } = usersContext;
 
-  const mapRef = React.useRef<null | any>(null),
+  const mapReference = React.useRef<null | any>(null),
     onMapMount = React.useCallback((map) => {
-      mapRef.current = map;
+      mapReference.current = map;
     }, []);
 
-  const createMarkers = React.useMemo(() => {
-    return checkedUsersIds.map((userid: string) => {
-      return (
+  const createMarkers = React.useMemo(
+    () =>
+      checkedUsersIds.map((userid: string) => (
         <Marker
-          key={userid}
-          position={[
-            users[userid].address.geo.lat,
-            users[userid].address.geo.lng,
-          ]}
           children={
             <Popup>
               <p>{users[userid].name}</p>
@@ -48,10 +43,15 @@ function UsersMap() {
               </p>
             </Popup>
           }
+          key={userid}
+          position={[
+            users[userid].address.geo.lat,
+            users[userid].address.geo.lng,
+          ]}
         />
-      );
-    });
-  }, [checkedUsersIds]);
+      )),
+    [checkedUsersIds]
+  );
 
   const zoom = 3,
     mapCenterPositionDefault = React.useMemo<[number, number]>(
@@ -59,36 +59,38 @@ function UsersMap() {
       []
     );
 
-  React.useEffect(
-    function onChangeMapCenterPosition() {
-      const isMounting = !mapRef.current;
-      if (isMounting) return;
+  React.useEffect(() => {
+    const isMounting = !mapReference.current;
+    if (isMounting) return;
 
-      const indexOfLastCheckedUser = checkedUsersIds.length - 1;
-      const centerCoords = checkedUsersIds.length
+    const indexOfLastCheckedUser = checkedUsersIds.length - 1;
+    const centerCoords =
+      checkedUsersIds.length > 0
         ? [
-            +users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lat,
-            +users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lng,
+            Number(
+              users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lat
+            ),
+            Number(
+              users[checkedUsersIds[indexOfLastCheckedUser]].address.geo.lng
+            ),
           ]
         : mapCenterPositionDefault;
-      mapRef.current.setView(centerCoords, zoom);
-    },
-    [checkedUsersIds, mapCenterPositionDefault]
-  );
+    mapReference.current.setView(centerCoords, zoom);
+  }, [checkedUsersIds, mapCenterPositionDefault]);
 
   return (
     <MapContainer
       center={mapCenterPositionDefault}
-      zoom={zoom}
+      className={mapStyles.mapWrapper}
       scrollWheelZoom={false}
       whenCreated={onMapMount}
-      className={mapStyles.mapWrapper}
+      zoom={zoom}
     >
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {!!checkedUsersIds.length && createMarkers}
+      {checkedUsersIds.length > 0 && createMarkers}
     </MapContainer>
   );
 }

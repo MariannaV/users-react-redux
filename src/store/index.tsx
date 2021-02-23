@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
+import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import { userReducer } from "./users/reducer";
 import thunkMiddleware from "redux-thunk";
 import { get } from "lodash-es";
