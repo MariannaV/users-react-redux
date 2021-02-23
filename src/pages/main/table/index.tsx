@@ -25,7 +25,7 @@ function UsersTable(): React.ReactElement {
   }, []);
 
   const tableHeader = React.useMemo(() => {
-    const headNames = ["Selected", "Name", "Telephone"];
+    const headNames = ["", "Name", "Telephone"];
     return (
       <>
         {headNames.map((headName: string) => {
