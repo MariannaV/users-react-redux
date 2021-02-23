@@ -1,0 +1,13 @@
+{
+  "name": "utils-project-packages",
+  "description": "Common utils packages",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "lodash-es": "4.17.21",
+    "immer": "8.0.1"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "4.17.4"
+  }
+}

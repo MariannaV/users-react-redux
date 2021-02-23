@@ -1,18 +1,17 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
-import { userReducer } from "./users/reducer";
+import React from "react";
+import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { get } from "lodash-es";
 import CONSTANTS from "../consts";
-import React from "react";
 import { NUsers } from "./users/@types";
+import { userReducer } from "./users/reducer";
 
 export interface IStore {
   users: NUsers.IStore;
 }
 
-export function configureStore(preloadedState?: any) {
+export function configureStore(preloadedState?: IStore) {
   const middlewares = [thunkMiddleware],
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     composedEnhancers =
       (CONSTANTS.isDev &&
         get(
@@ -21,7 +20,6 @@ export function configureStore(preloadedState?: any) {
           Function.prototype
         )({ trace: true })) ||
       compose,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     enhancer = composedEnhancers(applyMiddleware(...middlewares));
 
   return createStore(

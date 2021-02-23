@@ -1,45 +1,50 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import { CheckedUsersContext } from "../index";
-import { useSelector } from "react-redux";
 import { IStore } from "../../../store";
 import buttonStyles from "./index.scss";
+import { NUsers } from "../../../store/users/@types";
 
 export function SendDataButton(): React.ReactElement {
   const usersContext = React.useContext(CheckedUsersContext),
     { checkedUsersIds } = usersContext;
 
-  const usersMap = useSelector<IStore>((store) => store.users.map);
+  const usersMap = useSelector<IStore, IStore["users"]["map"]>(
+    (store) => store.users.map
+  );
 
-  const usersData = React.useMemo(() => {
-    return checkedUsersIds.map((userId) => {
-      return {
+  const usersData = React.useMemo(
+    () =>
+      checkedUsersIds.map((userId) => ({
         id: usersMap[userId].id,
         zipcode: usersMap[userId].address.zipcode,
-      };
-    });
-  }, [checkedUsersIds]);
+      })),
+    [checkedUsersIds]
+  );
 
-  const sendUsersData = React.useCallback(async () => dataRequest({ usersData }), [
+  const sendUsersData = React.useCallback(() => dataRequest({ usersData }), [
     usersData,
   ]);
 
   return (
     <Button
-      className={buttonStyles.sendButton}
-      variant="outlined"
       children="Send"
+      className={buttonStyles.sendButton}
       color="primary"
+      disabled={checkedUsersIds.length === 0}
       onClick={sendUsersData}
-      disabled={!checkedUsersIds.length}
+      variant="outlined"
     />
   );
 }
 
-async function dataRequest(params: {
-  usersData: Array<{ id: string; zipcode: string }>;
+async function dataRequest(parameters: {
+  usersData: Array<
+    Pick<NUsers.IUser, "id"> & Pick<NUsers.IUser["address"], "zipcode">
+  >;
 }) {
-  const { usersData } = params;
+  const { usersData } = parameters;
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com", {
       method: "POST",
@@ -49,7 +54,7 @@ async function dataRequest(params: {
       body: JSON.stringify(usersData),
     });
     if (response.status !== 200)
-      throw Error(
+      throw new Error(
         `Failed sending selected users data. Response status is ${response.status}`
       );
     return await response.json();

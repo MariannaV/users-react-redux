@@ -1,12 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  Checkbox,
   Table,
+  TableBody,
+  TableCell,
   TableHead,
   TableRow,
-  TableCell,
-  Checkbox,
-  TableBody,
 } from "@material-ui/core";
 import { IStore } from "../../../store";
 import { NUsers } from "../../../store/users/@types";
@@ -18,28 +18,32 @@ export default React.memo(UsersTable);
 
 function UsersTable(): React.ReactElement {
   const dispatch = useDispatch(),
-    userIdsList = useSelector<IStore>((store) => store.users.list);
+    userIdsList = useSelector<IStore, IStore["users"]["list"]>(
+      (store) => store.users.list
+    );
 
   React.useEffect(() => {
-    dispatch(API_Users.usersGet({}));
+    dispatch(API_Users.usersGet());
   }, []);
 
   const tableHeader = React.useMemo(() => {
     const headNames = ["", "Name", "Telephone"];
     return (
       <>
-        {headNames.map((headName: string) => {
-          return <TableCell key={headName} children={headName} />;
-        })}
+        {headNames.map((headName: string) => (
+          <TableCell children={headName} key={headName} />
+        ))}
       </>
     );
   }, []);
 
-  const tableBody = React.useMemo(() => {
-    return userIdsList?.map((userId: any) => (
-      <UsersTableRow key={userId} userId={userId} />
-    ));
-  }, [userIdsList]);
+  const tableBody = React.useMemo(
+    () =>
+      userIdsList.map((userId: any) => (
+        <UsersTableRow key={userId} userId={userId} />
+      )),
+    [userIdsList]
+  );
 
   return (
     <div className={tableStyles.tableWrapper}>
@@ -55,8 +59,10 @@ interface IUsersTableRow {
   userId: NUsers.IUser["id"];
 }
 
-function UsersTableRow(props: IUsersTableRow) {
-  const user = useSelector<IStore>((store) => store.users.map[props.userId]);
+function UsersTableRow(properties: IUsersTableRow) {
+  const user = useSelector<IStore, NUsers.IUser>(
+    (store) => store.users.map[properties.userId]
+  );
   const usersContext = React.useContext(CheckedUsersContext),
     { setCheckedUsersIds } = usersContext;
 
@@ -66,22 +72,22 @@ function UsersTableRow(props: IUsersTableRow) {
         const checkboxValue = event.target;
         const nextValue = [...currentCheckedIds];
         if (checkboxValue.checked) {
-          nextValue.push(props.userId);
+          nextValue.push(properties.userId);
         } else {
-          const indexOfRemovedId = nextValue.indexOf(props.userId);
+          const indexOfRemovedId = nextValue.indexOf(properties.userId);
           nextValue.splice(indexOfRemovedId, 1);
         }
         return nextValue;
       });
     },
-    [props.userId]
+    [properties.userId]
   );
 
   return (
     <TableRow>
       <TableCell children={<Checkbox onChange={onSelectUser} />} />
-      <TableCell children={user?.name} />
-      <TableCell children={user?.phone} />
+      <TableCell children={user.name} />
+      <TableCell children={user.phone} />
     </TableRow>
   );
 }

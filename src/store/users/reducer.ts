@@ -19,12 +19,12 @@ export const userReducer = produce(
 
       case NUsers.ActionTypes.USERS_FETCH_SUCCESS: {
         draft.isLoading = false;
-        action.payload.forEach((user) => {
+        for (const user of action.payload) {
           if (!(user.id in draft.map)) {
             draft.list.push(user.id);
           }
           draft.map[user.id] = user;
-        });
+        }
         break;
       }
 

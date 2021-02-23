@@ -35,6 +35,7 @@ export namespace NUsers {
     USERS_FETCH_SUCCESS = "USERS_FETCH_SUCCESS",
     USERS_FETCH_FAIL = "USERS_FETCH_FAIL",
   }
+
   export type IUsersFetch =
     | { type: ActionTypes.USERS_FETCH_START }
     | { type: ActionTypes.USERS_FETCH_FAIL; errors: any }
