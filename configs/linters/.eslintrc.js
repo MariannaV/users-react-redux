@@ -27,27 +27,25 @@ module.exports = {
   ],
   extends: [
     "eslint:recommended",
-    // "plugin:@typescript-eslint/recommended",
-    // "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    // "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/errors",
     "plugin:import/warnings",
-    // "plugin:sonarjs/recommended",
-    // "plugin:unicorn/recommended",
-    // "esnext",
-    // "standard",
-    // "standard-react",
+    "plugin:sonarjs/recommended",
+    "plugin:unicorn/recommended",
+    "esnext",
+    "standard",
+    "standard-react",
     "prettier",
-    // "prettier/@typescript-eslint",
-    "prettier/react",
-    // "prettier/standard",
   ],
   rules: {
-    // "@typescript-eslint/tslint/config": [
-    //   "error",
-    //   {
-    //     lintFile: `${root}/configs/linters/tslint.json`,
-    //   },
-    // ],
+    "@typescript-eslint/tslint/config": [
+      "error",
+      {
+        lintFile: `${root}/configs/linters/tslint.json`,
+      },
+    ],
     "@typescript-eslint/ban-ts-comment": 0,
     "@typescript-eslint/restrict-template-expressions": 0,
     "@typescript-eslint/no-var-requires": 1,
@@ -93,8 +91,6 @@ module.exports = {
     "react/jsx-max-depth": [1, { max: 5 }],
     "react-hooks/exhaustive-deps": 1,
     "react-hooks/rules-of-hooks": 2,
-    // 'import/no-unresolved': 0, //temp
-    // 'import/extensions': 0, //temp
 
     "import/prefer-default-export": 0,
     "import/no-extraneous-dependencies": 0, //because of Yarn Workspaces
